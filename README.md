@@ -24,3 +24,23 @@ Wino Hunter is a simple arcade-style game built using Pygame, where the player c
    ```bash
    git clone https://github.com/Cloud1590/wineo-hunter.git
    cd wineo-hunter
+   
+3. **Run the Game**:
+   ```bash
+   python3 WinoHunter.py
+   
+4. **Controls**:
+
+Use arrow keys to move the police car.
+Press spacebar to shoot bullets.
+
+5. **Game Over**:
+
+When player health reaches zero, a game over screen appears.
+Click "Restart" to play again or "Quit" to exit.
+
+*Contributing*
+
+Contributions are welcome! Fork the repository and submit pull requests for any improvements or fixes.
+
+
