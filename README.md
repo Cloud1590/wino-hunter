@@ -17,7 +17,13 @@ Wino Hunter is a simple arcade-style game built using Pygame, where the player c
 1. **Prerequisites**:
    - Python 3.x
    - Pygame library (`pip install pygame`)
+## Installation
 
+To run Wino Hunter, you'll need to install the required dependencies listed in `requirements.txt`. You can install them using pip:
+
+```bash
+pip install -r requirements.txt
+```
 2. **Clone the Repository**:
    ```bash
    git clone https://github.com/Cloud1590/wineo-hunter.git
