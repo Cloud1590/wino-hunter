@@ -37,8 +37,9 @@ Press spacebar to shoot bullets.
 When player health reaches zero, a game over screen appears.
 Click "Restart" to play again or "Quit" to exit.
 
-**Contributing**
 
-**Contributions are welcome! Fork the repository and submit pull requests for any improvements or fixes.**
+
+**Contributing**
+*Contributions are welcome! Fork the repository and submit pull requests for any improvements or fixes.*
 
 
