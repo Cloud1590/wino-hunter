@@ -2,8 +2,6 @@
 
 Wino Hunter is a simple arcade-style game built using Pygame, where the player controls a police car to shoot down falling beer sprites while avoiding collisions and collecting health power-ups.
 
-![Gameplay Screenshot](screenshot.png)
-
 ## Features
 
 - **Player Control**: Use arrow keys to move the police car (left, right, up, down).
@@ -39,7 +37,7 @@ Press spacebar to shoot bullets.
 When player health reaches zero, a game over screen appears.
 Click "Restart" to play again or "Quit" to exit.
 
-#Contributing
+###Contributing
 
 Contributions are welcome! Fork the repository and submit pull requests for any improvements or fixes.
 
