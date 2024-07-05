@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import os
 
 # Initialize Pygame
 pygame.init()
@@ -12,25 +13,24 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 LIGHT_GRAY = (200, 200, 200)
 DARK_GRAY = (100, 100, 100)
+ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
 
 # Screen setup
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Wino Hunter")
 
 # Load images
-player_img = pygame.image.load("police_car.png")
-player_img = pygame.transform.scale(player_img, (50, 100))  # Adjusted size
+player_img = pygame.image.load(os.path.join(ASSETS_PATH, "police_car.png")).convert_alpha()
+player_img = pygame.transform.scale(player_img, (50, 100))
 beer_sprites = [
-    pygame.image.load("beer1.png"),
-    pygame.image.load("beer2.png"),
-    pygame.image.load("beer3.png")
-]  # Add more beer images if needed
-
-# Resize beer sprites
+    pygame.image.load(os.path.join(ASSETS_PATH, "beer1.png")).convert_alpha(),
+    pygame.image.load(os.path.join(ASSETS_PATH, "beer2.png")).convert_alpha(),
+    pygame.image.load(os.path.join(ASSETS_PATH, "beer3.png")).convert_alpha()
+]
 beer_sprites = [pygame.transform.scale(beer, (50, 50)) for beer in beer_sprites]
 
 # Load power-up image
-addHealth_img = pygame.image.load("addHealth.png").convert_alpha()
+addHealth_img = pygame.image.load(os.path.join(ASSETS_PATH, "addHealth.png")).convert_alpha()
 addHealth_img = pygame.transform.scale(addHealth_img, (25, 25))
 
 # Define Particle class
@@ -44,7 +44,7 @@ class Particle:
         self.direction = random.uniform(0, 2 * math.pi)
         self.x_speed = self.speed * math.cos(self.direction)
         self.y_speed = self.speed * math.sin(self.direction)
-        self.color = random.choice([LIGHT_GRAY, DARK_GRAY])  # Randomly choose color
+        self.color = random.choice([LIGHT_GRAY, DARK_GRAY])
     
     def update(self):
         self.x += self.x_speed
@@ -83,6 +83,13 @@ player_speed = 5
 player_health = 3
 
 # Enemy setup
+class Enemy:
+    def __init__(self, x, y):
+        self.rect = beer_sprites[0].get_rect(topleft=(x, y))
+        self.image = random.choice(beer_sprites)
+        self.hits_required = random.randint(1, 3)
+
+enemies = []
 enemy_speed = 5
 enemy_spawn_time = 500  # milliseconds
 last_enemy_spawn_time = pygame.time.get_ticks()
@@ -105,12 +112,11 @@ score = 0
 def spawn_enemy(existing_enemies):
     while True:
         x_pos = random.randint(0, SCREEN_WIDTH - 50)
-        enemy_img = random.choice(beer_sprites)
-        enemy_rect = enemy_img.get_rect(topleft=(x_pos, 0))
+        new_enemy = Enemy(x_pos, 0)
         
         # Check if the new enemy overlaps with any existing enemy
-        if not any(enemy_rect.colliderect(e['rect']) for e in existing_enemies):
-            return {'rect': enemy_rect, 'image': enemy_img, 'current_hits': random.randint(1, 3)}
+        if not any(new_enemy.rect.colliderect(e.rect) for e in existing_enemies):
+            return new_enemy
 
 # Function to spawn power-ups
 def spawn_powerup():
@@ -122,7 +128,7 @@ def spawn_powerup():
 
 # Function to draw health bar
 def draw_health_bar(screen, x, y, health):
-    heart_img = pygame.image.load("heart.png").convert_alpha()
+    heart_img = pygame.image.load(os.path.join(ASSETS_PATH, "heart.png")).convert_alpha()
     heart_img = pygame.transform.scale(heart_img, (25, 25))
     for i in range(3):
         if i < health:
@@ -151,13 +157,13 @@ def restart_game():
     last_enemy_spawn_time = pygame.time.get_ticks()
     last_powerup_spawn_time = pygame.time.get_ticks()
     powerups.clear()
+    enemies.clear()
 
 # Main function
 def main():
     global game_over, score, last_enemy_spawn_time, last_powerup_spawn_time, player_health
 
     running = True
-    enemies = []
     bullets = []
 
     clock = pygame.time.Clock()
@@ -167,6 +173,13 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        if restart_button_rect.collidepoint(event.pos):
+                            restart_game()
+                        elif quit_button_rect.collidepoint(event.pos):
+                            running = False
+                # Handle mouse clicks
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if restart_button_rect.collidepoint(event.pos):
                         restart_game()
@@ -174,6 +187,8 @@ def main():
                         running = False
 
             draw_game_over_screen(screen)
+            pygame.display.flip()
+        
         else:
             # Event handling
             for event in pygame.event.get():
@@ -199,73 +214,74 @@ def main():
             # Spawn enemies
             current_time = pygame.time.get_ticks()
             if current_time - last_enemy_spawn_time > enemy_spawn_time:
-                for _ in range(random.randint(1, 3)):  # Randomly spawn 1 to 3 enemies at once
-                    new_enemy = spawn_enemy(enemies)
-                    if new_enemy:
-                        enemies.append(new_enemy)
+                new_enemy = spawn_enemy(enemies)
+                if new_enemy:
+                    enemies.append(new_enemy)
                 last_enemy_spawn_time = current_time
 
             # Spawn power-ups
             if current_time - last_powerup_spawn_time > powerup_spawn_time:
-                spawn_powerup()
+                if player_health < 3:
+                    spawn_powerup()
                 last_powerup_spawn_time = current_time
 
             # Move enemies
-            for enemy in enemies[:]:  # Iterate over a copy of enemies list
-                enemy['rect'].y += enemy_speed
-                if enemy['rect'].y > SCREEN_HEIGHT:
+            for enemy in enemies[:]:
+                enemy.rect.y += enemy_speed
+                if enemy.rect.y > SCREEN_HEIGHT:
                     enemies.remove(enemy)
 
-            # Move bullets
-            for bullet in bullets[:]:  # Iterate over a copy of bullets list
-                bullet.y -= 10
-                if bullet.y < 0:
-                    bullets.remove(bullet)
-
             # Move power-ups
-            for powerup in powerups[:]:  # Iterate over a copy of powerups list
+            for powerup in powerups[:]:
                 powerup['rect'].y += powerup['speed']
                 if powerup['rect'].y > SCREEN_HEIGHT:
                     powerups.remove(powerup)
 
-            # Check for collisions
-            player_rect = pygame.Rect(player_pos[0], player_pos[1], 50, 100)
-            for enemy in enemies[:]:  # Iterate over a copy of enemies list
-                if player_rect.colliderect(enemy['rect']):
-                    particle_manager.generate_particles(enemy['rect'].centerx, enemy['rect'].centery)
+            # Bullet movement and collision handling
+            for bullet in bullets[:]:
+                bullet.y -= 10
+                if bullet.y < 0:
+                    bullets.remove(bullet)
+
+                for enemy in enemies[:]:
+                    if bullet.colliderect(enemy.rect):
+                        enemy.hits_required -= 1
+                        if enemy.hits_required <= 0:
+                            score += 1
+                            enemies.remove(enemy)
+                        bullets.remove(bullet)
+                        particle_manager.generate_particles(enemy.rect.centerx, enemy.rect.centery)
+
+                for powerup in powerups[:]:
+                    if bullet.colliderect(powerup['rect']):
+                        powerups.remove(powerup)
+                        if player_health < 3:
+                            player_health += 1
+                        bullets.remove(bullet)
+
+            # Enemy collision with player
+            for enemy in enemies[:]:
+                if enemy.rect.colliderect(pygame.Rect(player_pos[0], player_pos[1], 50, 100)):
                     enemies.remove(enemy)
                     player_health -= 1
-                    if player_health <= 0:
-                        game_over = True
-                for bullet in bullets[:]:  # Iterate over a copy of bullets list
-                    if bullet.colliderect(enemy['rect']):
-                        bullets.remove(bullet)
-                        enemy['current_hits'] -= 1
-                        if enemy['current_hits'] <= 0:
-                            enemies.remove(enemy)
-                            score += 1
-                            particle_manager.generate_particles(enemy['rect'].centerx, enemy['rect'].centery)
+                    particle_manager.generate_particles(enemy.rect.centerx, enemy.rect.centery)
 
-            # Check for power-up collision with player
-            for powerup in powerups[:]:  # Iterate over a copy of powerups list
-                if player_rect.colliderect(powerup['rect']):
+            # Player collision with power-ups
+            for powerup in powerups[:]:
+                if pygame.Rect(player_pos[0], player_pos[1], 50, 100).colliderect(powerup['rect']):
+                    powerups.remove(powerup)
                     if player_health < 3:
                         player_health += 1
-                    powerups.remove(powerup)
 
-            # Drawing
+            # Draw everything
             screen.fill(WHITE)
             screen.blit(player_img, player_pos)
             for enemy in enemies:
-                screen.blit(enemy['image'], enemy['rect'].topleft)
+                screen.blit(enemy.image, enemy.rect)
             for bullet in bullets:
-                pygame.draw.rect(screen, BLACK, bullet)
+                pygame.draw.rect(screen, RED, bullet)
             for powerup in powerups:
-                screen.blit(addHealth_img, powerup['rect'].topleft)
-
-            # Draw particles
-            particle_manager.update()
-            particle_manager.draw(screen)
+                screen.blit(addHealth_img, powerup['rect'])
 
             # Draw health bar
             draw_health_bar(screen, 10, 10, player_health)
@@ -274,7 +290,16 @@ def main():
             score_text = font.render(f"Score: {score}", True, BLACK)
             screen.blit(score_text, (SCREEN_WIDTH - 150, 10))
 
-        pygame.display.flip()
+            # Update particles
+            particle_manager.update()
+            particle_manager.draw(screen)
+
+            pygame.display.flip()
+
+            # Check game over condition
+            if player_health <= 0:
+                game_over = True
+
         clock.tick(60)
 
     pygame.quit()
