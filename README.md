@@ -46,6 +46,10 @@ When player health reaches zero, a game over screen appears.
 Click "Restart" to play again or "Quit" to exit.
 
 ---------------------------------------------------------------
+To build the executable for your system, use the following command:
+```
+pyinstaller --onefile --add-data "assets/*:assets" WinoHunter.py
+```
 
 **Contributing**
 *Contributions are welcome! Fork the repository and submit pull requests for any improvements or fixes.*
