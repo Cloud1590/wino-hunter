@@ -1,0 +1,3 @@
+([('WinoHunter',
+   '/Users/danielvance/Documents/GitHub/wino-hunter/dist/WinoHunter',
+   'EXECUTABLE')],)

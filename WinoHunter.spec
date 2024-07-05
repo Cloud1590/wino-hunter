@@ -5,7 +5,7 @@ a = Analysis(
     ['WinoHunter.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets/*', 'assets')],
+    datas=[('assets/', 'assets')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -29,10 +29,17 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['assets/icon.png'],
+)
+app = BUNDLE(
+    exe,
+    name='WinoHunter.app',
+    icon='assets/icon.png',
+    bundle_identifier=None,
 )

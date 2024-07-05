@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>WinoHunter</string>
+	<key>CFBundleExecutable</key>
+	<string>WinoHunter</string>
+	<key>CFBundleIconFile</key>
+	<string>generated-f39a2c436a7e7f255d921e32a2c5d9475309964570bc62f1e88b80407af189c0.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>WinoHunter</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>WinoHunter</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.0.0</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+</dict>
+</plist>
