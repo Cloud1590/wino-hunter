@@ -19,6 +19,10 @@ ASSETS_PATH = os.path.join(os.path.dirname(__file__), 'assets')
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Wino Hunter")
 
+# Set the icon
+icon = pygame.image.load(os.path.join(ASSETS_PATH, "icon.png"))  # Replace "icon.png" with your actual icon file
+pygame.display.set_icon(icon)
+
 # Load images
 player_img = pygame.image.load(os.path.join(ASSETS_PATH, "police_car.png")).convert_alpha()
 player_img = pygame.transform.scale(player_img, (50, 100))
