@@ -51,6 +51,11 @@ To build the executable for your system, use the following command:
 pyinstaller --onefile --add-data "assets/*:assets" WinoHunter.py
 ```
 
+macos building:
+```
+pyinstaller --onefile --windowed --add-data "assets/:assets" --icon "assets/icon.png" WinoHunter.py
+```
+
 **Contributing**
 *Contributions are welcome! Fork the repository and submit pull requests for any improvements or fixes.*
 
