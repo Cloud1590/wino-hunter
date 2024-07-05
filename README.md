@@ -56,6 +56,12 @@ macos building:
 pyinstaller --onefile --windowed --add-data "assets/:assets" --icon "assets/icon.png" WinoHunter.py
 ```
 
+
+
+```
+pyinstaller --onefile --windowed --add-data "assets/:assets" --icon "assets/icon.png" WinoHunter.py
+```
+
 **Contributing**
 *Contributions are welcome! Fork the repository and submit pull requests for any improvements or fixes.*
 
