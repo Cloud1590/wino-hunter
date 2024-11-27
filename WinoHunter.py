@@ -179,10 +179,13 @@ def main():
                     running = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        if restart_button_rect.collidepoint(event.pos):
-                            restart_game()
-                        elif quit_button_rect.collidepoint(event.pos):
-                            running = False
+                        restart_game()
+                # Handle mouse clicks
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if restart_button_rect.collidepoint(event.pos):
+                        restart_game()
+                    elif quit_button_rect.collidepoint(event.pos):
+                        running = False
                 # Handle mouse clicks
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if restart_button_rect.collidepoint(event.pos):
@@ -254,7 +257,7 @@ def main():
                             score += 1
                             enemies.remove(enemy)
                         bullets.remove(bullet)
-                        particle_manager.generate_particles(enemy.rect.centerx, enemy.rect.centery)
+                        particle_manager.generate_particles(enemy.rect.center[0], enemy.rect.center[1])
 
                 for powerup in powerups[:]:
                     if bullet.colliderect(powerup['rect']):
